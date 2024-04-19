@@ -1,13 +1,22 @@
 package com.example.EnumProject.data.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import java.util.Collection;
+import java.util.List;
 
 @Data
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "user")
 public class Cohort {
 
     @Id
@@ -21,5 +30,10 @@ public class Cohort {
     private String startDate;
     private String endDate;
     private String avatar;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+
 
 }
