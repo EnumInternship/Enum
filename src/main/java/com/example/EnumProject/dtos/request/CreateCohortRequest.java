@@ -1,4 +1,4 @@
-package com.example.EnumProject.dtos.register;
+package com.example.EnumProject.dtos.request;
 
 
 import lombok.AllArgsConstructor;
@@ -15,4 +15,6 @@ public class CreateCohortRequest {
     private String cohortDescription;
     private String email;
     private String password;
+    private String startDate;
+    private String endDate;
 }
