@@ -29,16 +29,16 @@ public class CohortServiceImpl implements CohortService {
 
 
     public AuthResponse createCohort(CreateCohortRequest cohortRequest) {
-        var user = Cohort.builder()
+        var cohort = Cohort.builder()
                 .name(cohortRequest.getCohortName())
                 .description(cohortRequest.getCohortDescription())
                 .email(cohortRequest.getEmail())
                 .password(passwordEncoder.encode(cohortRequest.getPassword()))
                 .role(Role.COHORT)
                 .build();
-        cohortRepository.save(user);
+        cohortRepository.save(cohort);
 
-        var jwtToken = jwtService.generateToken(user);
+        var jwtToken = jwtService.generateToken(cohort);
         return AuthResponse.builder()
                 .token(jwtToken)
                 .message("Successfully created cohort")
