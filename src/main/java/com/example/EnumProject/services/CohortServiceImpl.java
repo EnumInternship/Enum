@@ -25,7 +25,6 @@ public class CohortServiceImpl implements CohortService {
     private final CohortRepository cohortRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
-    private final AuthenticationManager authenticationManager;
     private final AuthenticationProvider authenticationProvider;
 
 
@@ -48,24 +47,9 @@ public class CohortServiceImpl implements CohortService {
 
     }
 
-//    @Override
-//    public AuthResponse authenticate(LoginCohortRequest loginRequest) {
-//        return null;
-//    }
 
     public AuthResponse authenticate(LoginCohortRequest request) {
-//        log.info("Authenticating user {}", request.getEmail());
-//        authenticationManager.authenticate(
-//                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-//        );
-//        log.info("Authenticated user {}", request.getEmail());
-//        var user = cohortRepository.findByEmail(request.getEmail()).orElse(null);
-//        log.info("Found user {}", user);
-//        var jwtToken = jwtService.generateToken(user);
-//        log.info("Successfully authenticated user {}", request.getEmail());
-//        return AuthResponse.builder()
-//                .token(jwtToken)
-//                .build();
+
         try {
             log.info("Authenticating user {}", request.getEmail());
             authenticationProvider.authenticate(
