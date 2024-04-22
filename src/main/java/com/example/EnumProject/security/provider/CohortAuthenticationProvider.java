@@ -44,8 +44,5 @@ public class CohortAuthenticationProvider implements AuthenticationProvider {
     public boolean supports(Class<?> authentication) {
         return false;
     }
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+
 }
