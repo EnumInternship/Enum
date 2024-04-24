@@ -29,7 +29,7 @@ public class SecurityConfig {
                 .sessionManagement(c->c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .authorizeHttpRequests(c->c.requestMatchers("/api/v1/auth/**")
+                .authorizeHttpRequests(c->c.requestMatchers("/api/v1/auth/createCohort", "/api/v1/auth/authenticate", "/api/v2/auth/register", "/api/v2/auth/authenticateUser")
                         .permitAll()
                         .anyRequest().authenticated()).build();
     }

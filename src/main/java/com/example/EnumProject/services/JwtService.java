@@ -6,6 +6,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import com.auth0.jwt.JWT;
@@ -20,6 +21,7 @@ import java.util.function.Function;
 
 @Service
 @AllArgsConstructor
+
 public class JwtService {
     private final JwtConfig jwtConfig;
     public String extractUsername(String token) {

@@ -4,7 +4,9 @@ import com.example.EnumProject.data.model.Instructor;
 import com.example.EnumProject.data.model.Status;
 import com.example.EnumProject.data.repository.InstructorRepository;
 import com.example.EnumProject.dtos.request.AddInstructorRequest;
+import com.example.EnumProject.dtos.request.InviteInstructorRequest;
 import com.example.EnumProject.dtos.response.AddInstructorResponse;
+import com.example.EnumProject.dtos.response.InviteResponse;
 import com.example.EnumProject.exception.DuplicateInstructorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +35,11 @@ public class InstructorServiceImpl implements InstructorService{
         response.setMessage("Instructor added successfully.");
 
         return response;
+    }
+
+    @Override
+    public InviteResponse inviteInstructor(InviteInstructorRequest inviteInstructor) {
+        return null;
     }
 
     private static Instructor mapInstructor(AddInstructorRequest addInstructorRequest) {

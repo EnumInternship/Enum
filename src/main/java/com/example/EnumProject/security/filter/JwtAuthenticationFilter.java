@@ -6,6 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +20,7 @@ import java.io.IOException;
 
 @Component
 @AllArgsConstructor
+
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private JwtService jwtService;
     private final UserDetailsService userDetailsService;
@@ -40,7 +42,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-        jwtToken = authorizationHeader.substring(7); // we are starting from index 7 because we need to count the bearer + space
+        jwtToken = authorizationHeader.substring(7);
         userEmail = jwtService.extractUsername(jwtToken);
         if ( userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
@@ -57,10 +59,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         }
         filterChain.doFilter(request, response);
-
-
     }
-
-
 }
 
