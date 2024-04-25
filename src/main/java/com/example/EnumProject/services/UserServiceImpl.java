@@ -1,16 +1,13 @@
 package com.example.EnumProject.services;
 
-import com.example.EnumProject.data.model.Cohort;
-import com.example.EnumProject.data.model.Post;
-import com.example.EnumProject.data.model.Role;
-import com.example.EnumProject.data.model.User;
+import com.example.EnumProject.data.model.*;
 import com.example.EnumProject.data.repository.PostRepository;
 import com.example.EnumProject.data.repository.UserRepository;
-import com.example.EnumProject.dtos.request.AddPostRequest;
-import com.example.EnumProject.dtos.request.LoginCohortRequest;
-import com.example.EnumProject.dtos.request.LoginUserRequest;
-import com.example.EnumProject.dtos.request.RegisterUserRequest;
+import com.example.EnumProject.dtos.request.*;
 import com.example.EnumProject.dtos.response.AuthResponse;
+import com.example.EnumProject.dtos.response.CommentResponse;
+import com.example.EnumProject.dtos.response.DeleteResponse;
+import com.example.EnumProject.dtos.response.UpdateResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -83,5 +80,20 @@ public class UserServiceImpl implements UserService{
     @Override
     public Post addPost(AddPostRequest addPostRequest) {
         return postService.addPost(addPostRequest);
+    }
+
+    @Override
+    public CommentResponse addComment(CommentRequest commentRequest) {
+        return postService.addComment(commentRequest);
+    }
+
+    @Override
+    public UpdateResponse updatePost(Post post, Long postId) {
+        return postService.updatePost(post, postId);
+    }
+
+    @Override
+    public DeleteResponse deletePost(Long postId) {
+        return postService.deletePost(postId);
     }
 }
