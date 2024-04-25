@@ -1,7 +1,9 @@
 package com.example.EnumProject.config;
 
 import com.example.EnumProject.data.repository.CohortRepository;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,7 +17,13 @@ import org.springframework.web.client.RestTemplate;
 
 @RequiredArgsConstructor
 @Configuration
+@Getter
 public class AppConfig {
+
+    @Value("${mail.api.key}")
+    private String mailApiKey;
+    @Value("${mail.api.url}")
+    private String mailServiceUrl;
     private final CohortRepository cohortRepository;
 
     @Bean

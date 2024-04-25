@@ -9,6 +9,6 @@ public interface InstructorService {
 
     AddInstructorResponse addInstructor(AddInstructorRequest addInstructorRequest);
 
-    InviteResponse inviteInstructor(InviteInstructorRequest inviteInstructor);
+//    InviteResponse inviteInstructor(InviteInstructorRequest inviteInstructor);
 }
 

@@ -1,14 +1,19 @@
 package com.example.EnumProject.services;
 
 import com.example.EnumProject.data.model.Instructor;
+import com.example.EnumProject.data.model.Recipient;
+import com.example.EnumProject.data.model.Sender;
 import com.example.EnumProject.data.model.Status;
 import com.example.EnumProject.data.repository.InstructorRepository;
 import com.example.EnumProject.dtos.request.AddInstructorRequest;
+import com.example.EnumProject.dtos.request.InviteInstructorRequest;
 import com.example.EnumProject.dtos.response.AddInstructorResponse;
+import com.example.EnumProject.dtos.response.InviteResponse;
 import com.example.EnumProject.exception.DuplicateInstructorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -16,6 +21,10 @@ public class InstructorServiceImpl implements InstructorService{
 
     @Autowired
     private InstructorRepository instructorRepository;
+    @Autowired
+    private InvitationService invitationService;
+    @Autowired
+    private MailService mailService;
 
     @Override
     public AddInstructorResponse addInstructor(AddInstructorRequest addInstructorRequest) {
@@ -23,6 +32,9 @@ public class InstructorServiceImpl implements InstructorService{
 
         Instructor newInstructor = mapInstructor(addInstructorRequest);
         instructorRepository.save(newInstructor);
+
+        String email = newInstructor.getInstructorEmail();
+        mailService.sendMail(buildMailRequest(email));
 
         AddInstructorResponse response = new AddInstructorResponse();
         response.setInstructorName(newInstructor.getInstructorName());
@@ -52,6 +64,30 @@ public class InstructorServiceImpl implements InstructorService{
 
         if (newInstructor.isPresent())
             throw new DuplicateInstructorException("Instructor exists");
+    }
+
+    private static InviteInstructorRequest buildMailRequest(String email){
+        InviteInstructorRequest mailRequest = new InviteInstructorRequest();
+        Sender sender = new Sender("Enum Africa", "instructor@email.com");
+        List<Recipient> recipients = List.of(
+                new Recipient(email, email)
+        );
+
+        String name = "";
+        for (Recipient recipient : recipients) {
+            name = recipient.getInstructorName();
+        }
+
+        String htmlContent = "<p>Hello " + name + ",</p>"
+                + "<p>Welcome to our learning platform!</p>"
+                + "<p>Best regards,</p>"
+                + "<p>Enum Africa Team</p>";
+
+        mailRequest.setSubject("Invitation");
+        mailRequest.setHtmlContent(htmlContent);
+        mailRequest.setSender(sender);
+        mailRequest.setRecipients(recipients);
+        return mailRequest;
     }
 
 }
