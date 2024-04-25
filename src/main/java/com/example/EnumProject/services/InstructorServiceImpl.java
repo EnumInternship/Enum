@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class InstructorServiceImpl implements InstructorService{
@@ -78,8 +79,11 @@ public class InstructorServiceImpl implements InstructorService{
             name = recipient.getInstructorName();
         }
 
+        String invitationToken = generateInviteToken();
+
         String htmlContent = "<p>Hello " + name + ",</p>"
                 + "<p>Welcome to our learning platform!</p>"
+                + "<p>Here's your 8 digit code " + invitationToken + " </p>"
                 + "<p>Best regards,</p>"
                 + "<p>Enum Africa Team</p>";
 
@@ -88,6 +92,17 @@ public class InstructorServiceImpl implements InstructorService{
         mailRequest.setSender(sender);
         mailRequest.setRecipients(recipients);
         return mailRequest;
+    }
+
+    private static String generateInviteToken() {
+        StringBuilder token = new StringBuilder();
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        int length = 6;
+        Random random = new Random();
+        for (int index = 0; index < length; index++) {
+            token.append(characters.charAt(random.nextInt(characters.length())));
+        }
+        return token.toString();
     }
 
 }
