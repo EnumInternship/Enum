@@ -14,6 +14,7 @@ public class Instructor {
     private String instructorName;
     private String organization;
     private String instructorEmail;
+    private String token;
     private Status status;
     private String course;
     private String date;

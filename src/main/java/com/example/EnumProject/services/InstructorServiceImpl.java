@@ -10,6 +10,8 @@ import com.example.EnumProject.dtos.request.InviteInstructorRequest;
 import com.example.EnumProject.dtos.response.AddInstructorResponse;
 import com.example.EnumProject.dtos.response.InviteResponse;
 import com.example.EnumProject.exception.DuplicateInstructorException;
+import com.example.EnumProject.exception.IncorrectTokenException;
+import com.example.EnumProject.exception.InstructorNotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +37,7 @@ public class InstructorServiceImpl implements InstructorService{
         instructorRepository.save(newInstructor);
 
         String email = newInstructor.getInstructorEmail();
-        mailService.sendMail(buildMailRequest(email));
+        mailService.sendMail(buildMailRequest(newInstructor));
 
         AddInstructorResponse response = new AddInstructorResponse();
         response.setInstructorName(newInstructor.getInstructorName());
@@ -46,6 +48,25 @@ public class InstructorServiceImpl implements InstructorService{
         response.setMessage("Instructor added successfully.");
 
         return response;
+    }
+
+    @Override
+    public Instructor vrifyInvitedInstructor(String token) {
+        Optional<Instructor> instructorOptional = instructorRepository.findByToken(token);
+
+        if (instructorOptional.isEmpty())
+            throw new InstructorNotFound("The token is incorrect");
+
+        Instructor instructor = instructorOptional.get();
+
+        String generatedToken = instructor.getToken();
+
+        if (token.equals(generatedToken)) {
+            instructor.setStatus(Status.ACTIVE);
+            instructorRepository.save(instructor);
+            return instructor;
+        }
+        throw new IncorrectTokenException("The token is incorrect");
     }
 
     @Override
@@ -72,21 +93,18 @@ public class InstructorServiceImpl implements InstructorService{
             throw new DuplicateInstructorException("Instructor exists");
     }
 
-    private static InviteInstructorRequest buildMailRequest(String email){
+    private InviteInstructorRequest buildMailRequest(Instructor instructor){
+        String invitationToken = generateInviteToken(instructor);
+        instructor.setToken(invitationToken);
+        instructorRepository.save(instructor);
+
         InviteInstructorRequest mailRequest = new InviteInstructorRequest();
         Sender sender = new Sender("Enum Africa", "instructor@email.com");
         List<Recipient> recipients = List.of(
-                new Recipient(email, email)
+                new Recipient(instructor.getInstructorEmail(), instructor.getInstructorEmail())
         );
 
-        String name = "";
-        for (Recipient recipient : recipients) {
-            name = recipient.getInstructorName();
-        }
-
-        String invitationToken = generateInviteToken();
-
-        String htmlContent = "<p>Hello " + name + ",</p>"
+        String htmlContent = "<p>Hello " + instructor.getInstructorName() + ",</p>"
                 + "<p>Welcome to our learning platform!</p>"
                 + "<p>Here's your 8 digit code " + invitationToken + " </p>"
                 + "<p>Best regards,</p>"
@@ -99,11 +117,16 @@ public class InstructorServiceImpl implements InstructorService{
         return mailRequest;
     }
 
-    private static String generateInviteToken() {
+    private static String generateInviteToken(Instructor instructor) {
         StringBuilder token = new StringBuilder();
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        int length = 6;
+        int length = 8;
+
+        String email = instructor.getInstructorEmail();
+        token.append(email.hashCode());
+
         Random random = new Random();
+
         for (int index = 0; index < length; index++) {
             token.append(characters.charAt(random.nextInt(characters.length())));
         }
