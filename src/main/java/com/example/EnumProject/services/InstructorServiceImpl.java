@@ -36,7 +36,6 @@ public class InstructorServiceImpl implements InstructorService{
         Instructor newInstructor = mapInstructor(addInstructorRequest);
         instructorRepository.save(newInstructor);
 
-        String email = newInstructor.getInstructorEmail();
         mailService.sendMail(buildMailRequest(newInstructor));
 
         AddInstructorResponse response = new AddInstructorResponse();
