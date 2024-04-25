@@ -1,13 +1,12 @@
 package com.example.EnumProject.controller;
 
+import com.example.EnumProject.data.model.Instructor;
 import com.example.EnumProject.data.model.Post;
 import com.example.EnumProject.data.model.User;
-import com.example.EnumProject.dtos.request.AddPostRequest;
-import com.example.EnumProject.dtos.request.CommentRequest;
-import com.example.EnumProject.dtos.request.LoginUserRequest;
-import com.example.EnumProject.dtos.request.RegisterUserRequest;
+import com.example.EnumProject.dtos.request.*;
+import com.example.EnumProject.dtos.response.AddInstructorResponse;
 import com.example.EnumProject.dtos.response.AuthResponse;
-import com.example.EnumProject.dtos.response.CommentResponse;
+import com.example.EnumProject.services.InstructorService;
 import com.example.EnumProject.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class UserController {
     private final UserService userService;
+    private final InstructorService instructorService;
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(
@@ -36,5 +36,18 @@ public class UserController {
         return ResponseEntity.ok(userService.login(loginUserRequest));
     }
 
+    @PostMapping("/createPost")
+    public ResponseEntity<Post> createPost(@RequestBody AddPostRequest request) {
+        return ResponseEntity.ok(userService.addPost(request));
+    }
 
+    @PostMapping("/instructor")
+    public ResponseEntity<AddInstructorResponse> addInstructor(@RequestBody AddInstructorRequest addInstructorRequest) {
+        return ResponseEntity.ok(instructorService.addInstructor(addInstructorRequest));
+    }
+
+    @PostMapping("/verification")
+    public ResponseEntity<Instructor> verifyInstructor(@RequestBody String token) {
+        return ResponseEntity.ok(instructorService.vrifyInvitedInstructor(token));
+    }
 }
