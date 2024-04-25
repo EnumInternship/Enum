@@ -3,9 +3,11 @@ package com.example.EnumProject.controller;
 import com.example.EnumProject.data.model.Post;
 import com.example.EnumProject.data.model.User;
 import com.example.EnumProject.dtos.request.AddPostRequest;
+import com.example.EnumProject.dtos.request.CommentRequest;
 import com.example.EnumProject.dtos.request.LoginUserRequest;
 import com.example.EnumProject.dtos.request.RegisterUserRequest;
 import com.example.EnumProject.dtos.response.AuthResponse;
+import com.example.EnumProject.dtos.response.CommentResponse;
 import com.example.EnumProject.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,8 +36,5 @@ public class UserController {
         return ResponseEntity.ok(userService.login(loginUserRequest));
     }
 
-    @PostMapping("/createPost")
-    public ResponseEntity<Post> createPost(@RequestBody AddPostRequest request) {
-        return ResponseEntity.ok(userService.addPost(request));
-    }
+
 }

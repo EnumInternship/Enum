@@ -47,10 +47,10 @@ public class InstructorServiceImpl implements InstructorService{
         return response;
     }
 
-    @Override
-    public InviteResponse inviteInstructor(InviteInstructorRequest inviteInstructor) {
-        return null;
-    }
+//    @Override
+//    public InviteResponse inviteInstructor(InviteInstructorRequest inviteInstructor) {
+//        return null;
+//    }
 
     private static Instructor mapInstructor(AddInstructorRequest addInstructorRequest) {
         Instructor newInstructor = new Instructor();

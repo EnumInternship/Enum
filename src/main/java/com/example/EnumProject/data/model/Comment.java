@@ -20,7 +20,7 @@ public class Comment {
     private String author;
 
     @ManyToOne
-    @JoinColumn(name = "post_id")
+    @JoinColumn(name = "postId")
     private Post post;
     @ManyToOne
     private Comment comment;

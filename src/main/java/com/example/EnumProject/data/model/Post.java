@@ -19,13 +19,14 @@ public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(insertable = false, updatable = false)
     private Long id;
     private String title;
     private String content;
     private String author;
     private String dateCreated;
     @ManyToOne
-    @JoinColumn(name = "post_id")
+    @JoinColumn(name = "postId")
     private User user;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
