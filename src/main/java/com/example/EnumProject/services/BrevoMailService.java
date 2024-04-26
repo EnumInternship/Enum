@@ -26,9 +26,10 @@ public class BrevoMailService implements MailService{
 
     @Override
     public InviteResponse sendMail(InviteInstructorRequest inviteRequest) {
+        System.out.println(inviteRequest);
         HttpHeaders headers = addRequestHeaders();
         RequestEntity<InviteInstructorRequest> requestEntity = new RequestEntity<>(inviteRequest, headers, POST, URI.create(appConfig.getMailServiceUrl()));
-        ResponseEntity<InviteResponse> mailResponse =restTemplate.postForEntity(appConfig.getMailServiceUrl(), requestEntity,InviteResponse.class);
+        ResponseEntity<InviteResponse> mailResponse =restTemplate.postForEntity(appConfig.getMailServiceUrl(), requestEntity, InviteResponse.class);
         return buildSendMailResponse(mailResponse);
     }
 
