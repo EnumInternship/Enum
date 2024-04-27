@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 public class CreateCohortRequest {
     private String cohortName;
     private String cohortDescription;
-    private String email;
     private String password;
     private String startDate;
     private String endDate;

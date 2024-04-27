@@ -1,6 +1,7 @@
 package com.example.EnumProject.config;
 
 import com.example.EnumProject.data.repository.CohortRepository;
+import com.example.EnumProject.data.repository.UserRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,11 +26,13 @@ public class AppConfig {
     @Value("${mail.api.url}")
     private String mailServiceUrl;
     private final CohortRepository cohortRepository;
+    private final UserRepository userRepository;
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> (UserDetails) cohortRepository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Cohort not found"));
+        return username -> userRepository.findByUsername(username)
+                .orElseThrow(()-> new UsernameNotFoundException("User not found"));
+
     }
 
     @Bean
