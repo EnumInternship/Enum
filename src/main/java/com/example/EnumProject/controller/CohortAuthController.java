@@ -3,8 +3,10 @@ package com.example.EnumProject.controller;
 
 import com.example.EnumProject.dtos.request.CreateCohortRequest;
 import com.example.EnumProject.dtos.request.LoginCohortRequest;
+import com.example.EnumProject.dtos.response.ApiResponse;
 import com.example.EnumProject.dtos.response.AuthResponse;
 import com.example.EnumProject.services.CohortService;
+import com.example.EnumProject.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -19,22 +21,16 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class CohortAuthController {
     private final CohortService cohortService;
+    private final UserService userService;
 
     @PostMapping("/createCohort")
-    public ResponseEntity<AuthResponse> createCohort(
+    public ApiResponse<?> createCohort(
             @RequestBody CreateCohortRequest request
     ) {
-        return ResponseEntity.ok(cohortService.createCohort(request));
+        return cohortService.createCohort(request);
     }
 
 
-    @PostMapping("/authenticate")
-    public ResponseEntity<AuthResponse> register(
 
-            @RequestBody LoginCohortRequest request
-    ) {
-        log.info("Inside authenticate method");
-        return ResponseEntity.ok(cohortService.authenticate(request));
-    }
 
 }

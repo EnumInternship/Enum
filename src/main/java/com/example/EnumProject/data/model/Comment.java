@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@Table(name = "comment")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,7 +21,7 @@ public class Comment {
     private String author;
 
     @ManyToOne
-    @JoinColumn(name = "post_id")
+    @JoinColumn(name = "postId")
     private Post post;
     @ManyToOne
     private Comment comment;
