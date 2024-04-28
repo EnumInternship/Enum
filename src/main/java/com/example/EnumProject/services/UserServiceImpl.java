@@ -31,17 +31,17 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public AuthResponse signUp(RegisterUserRequest registerUser) {
-        var registeredUser = User.builder()
+        var user = User.builder()
                 .username(registerUser.getUsername())
                 .email(registerUser.getEmail())
                 .password(passwordEncoder.encode(registerUser.getPassword()))
                 .role(Role.USER)
                 .build();
 
-        userRepository.save(registeredUser);
+        userRepository.save(user);
 
 
-        var jwtToken = jwtService.generateToken((UserDetails) registeredUser);
+        var jwtToken = jwtService.generateToken(user);
         return AuthResponse.builder()
                 .token(jwtToken)
                 .message("Successfully created user")
@@ -65,11 +65,11 @@ public class UserServiceImpl implements UserService{
             }
             log.info("Found user {}", user);
 
-            var jwtToken = jwtService.generateToken((UserDetails) user);
+            var jwtToken = jwtService.generateToken(user);
             log.info("Successfully authenticated user {}", request.getEmail());
 
             return AuthResponse.builder()
-                    .token(jwtToken)
+                    .token(jwtToken).message("Successfully logged in")
                     .build();
         } catch (AuthenticationException e) {
             log.error("Authentication failed for user {}", request.getEmail(), e);

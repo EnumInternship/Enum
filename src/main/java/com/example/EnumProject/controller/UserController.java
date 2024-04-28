@@ -36,10 +36,6 @@ public class UserController {
         return ResponseEntity.ok(userService.login(loginUserRequest));
     }
 
-    @PostMapping("/createPost")
-    public ResponseEntity<Post> createPost(@RequestBody AddPostRequest request) {
-        return ResponseEntity.ok(userService.addPost(request));
-    }
 
     @PostMapping("/instructor")
     public ResponseEntity<AddInstructorResponse> addInstructor(@RequestBody AddInstructorRequest addInstructorRequest) {

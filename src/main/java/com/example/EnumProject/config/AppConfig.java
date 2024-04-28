@@ -28,7 +28,7 @@ public class AppConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> (UserDetails) cohortRepository.findByEmail(username)
+        return username -> cohortRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Cohort not found"));
     }
 
