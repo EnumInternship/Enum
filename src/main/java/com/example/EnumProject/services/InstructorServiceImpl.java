@@ -98,7 +98,7 @@ public class InstructorServiceImpl implements InstructorService{
         instructorRepository.save(instructor);
 
         InviteInstructorRequest mailRequest = new InviteInstructorRequest();
-        Sender sender = new Sender("Enum Africa", "instructor@email.com");
+        Sender sender = new Sender("Enum Africa", "gadaphi001@gmail.com");
         List<Recipient> recipients = List.of(
                 new Recipient(instructor.getInstructorEmail(), instructor.getInstructorEmail())
         );

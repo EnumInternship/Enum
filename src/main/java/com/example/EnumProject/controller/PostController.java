@@ -1,9 +1,12 @@
 package com.example.EnumProject.controller;
 
 
+import com.example.EnumProject.data.model.Comment;
 import com.example.EnumProject.data.model.Post;
 import com.example.EnumProject.dtos.request.AddPostRequest;
 import com.example.EnumProject.dtos.request.CommentRequest;
+import com.example.EnumProject.dtos.request.UpdateCommentReq;
+import com.example.EnumProject.dtos.response.ApiResponse;
 import com.example.EnumProject.dtos.response.CommentResponse;
 import com.example.EnumProject.dtos.response.DeleteResponse;
 import com.example.EnumProject.dtos.response.UpdateResponse;
@@ -23,27 +26,43 @@ public class PostController {
     private final UserService userService;
 
     @PostMapping("/createPost")
-    public ResponseEntity<Post> createPost(@RequestBody AddPostRequest request) {
-        return ResponseEntity.ok(userService.addPost(request));
+    public ApiResponse<Post> createPost(@RequestBody AddPostRequest request) {
+        log.info("Creating new post: {}", request);
+        try {
+            log.info("Creating new post: {}", request);
+            return ApiResponse.success(userService.addPost(request), "Post Added Successfully");
+
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return ApiResponse.error("Error while adding post");
+        }
     }
 
     @PostMapping("/addComment")
-    public ResponseEntity <CommentResponse> addComment(@RequestBody CommentRequest request) {
-        return ResponseEntity.ok(userService.addComment(request));
+    public ApiResponse<?> addComment(@RequestBody CommentRequest request) {
+
+        return ApiResponse.success(userService.addComment(request),
+                "Comment added");
     }
-    @PatchMapping("/updateComment")
-    public ResponseEntity<UpdateResponse> updateComment(@RequestBody Post post){
-        return ResponseEntity.ok(userService.updatePost(post, post.getId()));
+    @PatchMapping("/editComment")
+    public ApiResponse<?> editComment(@RequestBody UpdateCommentReq comment){
+        return ApiResponse.success(userService.editComment(comment),
+                "Comment updated");
     }
 
+//    @PatchMapping("/editComment")
+//    public ApiResponse<?> editComment(@RequestBody CommentRequest request) {
+//        return ApiResponse.success(userService.editComment(request, ))
+//    }
+
     @PatchMapping("/updatePost")
-    public ResponseEntity<UpdateResponse> updatePost(@RequestBody Post post){
-        return ResponseEntity.ok(userService.updatePost(post, post.getId()));
+    public ApiResponse<?> updatePost(@RequestBody Post post){
+        return ApiResponse.success(userService.updatePost(post, post.getId()), "Post Updated");
     }
 
     @DeleteMapping("deletePost")
-    public ResponseEntity<DeleteResponse> deletePost(@RequestBody Post post){
-        return ResponseEntity.ok(userService.deletePost(post.getId()));
+    public ApiResponse<?> deletePost(@RequestBody Post post){
+        return ApiResponse.success(userService.deletePost(post.getId()),  "Post Deleted");
     }
 
 

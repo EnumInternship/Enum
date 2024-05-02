@@ -6,7 +6,6 @@ import com.example.EnumProject.data.model.User;
 import com.example.EnumProject.dtos.request.*;
 import com.example.EnumProject.dtos.response.AddInstructorResponse;
 import com.example.EnumProject.dtos.response.ApiResponse;
-import com.example.EnumProject.dtos.response.AuthResponse;
 import com.example.EnumProject.services.CohortService;
 import com.example.EnumProject.services.InstructorService;
 import com.example.EnumProject.services.UserService;
@@ -28,39 +27,61 @@ public class UserController {
     private final CohortService cohortService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(
-            @RequestBody RegisterUserRequest registerUserRequest) {
-        System.out.println("registered");
-        return ResponseEntity.ok(userService.signUp(registerUserRequest));
+    public ApiResponse<?> register(@RequestBody RegisterUserRequest registerUserRequest) {
+        try {
+            return ApiResponse.success(userService.signUp(registerUserRequest),
+                    "Sign up successful");
+        }catch (Exception e){
+            return ApiResponse.error("Sign up failed");
+        }
     }
 
     @PostMapping("/authenticateUser")
-    public ResponseEntity<AuthResponse> authenticateUser(
-            @RequestBody LoginUserRequest loginUserRequest){
-        System.out.println("i got to the controller");
-        return ResponseEntity.ok(userService.login(loginUserRequest));
+    public ApiResponse<?> authenticateUser(@RequestBody LoginUserRequest loginUserRequest){
+        try {
+            return ApiResponse.success(userService.login(loginUserRequest),
+                    "Login successful");
+        }catch (Exception e){
+            return ApiResponse.error("Login failed");
+        }
     }
 
     @PostMapping("/createCohort")
     public ApiResponse<?> createCohort(
             @RequestBody CreateCohortRequest request
     ) {
+        try {
+            return ApiResponse.success(cohortService.createCohort(request),
+                    "Cohort Successfully created");
+        }catch (Exception e){
+            return ApiResponse.error("Cohort creation failed");
+        }
 
-        return ApiResponse.success(cohortService.createCohort(request), "Cohort Successfully created");
     }
 
-//    @PostMapping("/createPost")
-//    public ResponseEntity<Post> createPost(@RequestBody AddPostRequest request) {
-//        return ResponseEntity.ok(userService.addPost(request));
-//    }
+
 
     @PostMapping("/instructor")
-    public ResponseEntity<AddInstructorResponse> addInstructor(@RequestBody AddInstructorRequest addInstructorRequest) {
-        return ResponseEntity.ok(instructorService.addInstructor(addInstructorRequest));
+    public ApiResponse<?> addInstructor(@RequestBody AddInstructorRequest addInstructorRequest) {
+        try {
+            return ApiResponse.success(instructorService.addInstructor(addInstructorRequest),
+                    "Instructor Added successfully");
+        }
+        catch (Exception e){
+            return ApiResponse.error("Instructor creation failed");
+        }
+
     }
 
     @PostMapping("/verification")
-    public ResponseEntity<Instructor> verifyInstructor(@RequestBody String token) {
-        return ResponseEntity.ok(instructorService.vrifyInvitedInstructor(token));
+    public ApiResponse<Instructor> verifyInstructor(@RequestBody String token) {
+        try {
+            return ApiResponse.success(instructorService.vrifyInvitedInstructor(token),
+                    "Instructor Verified successfully");
+        }
+        catch (Exception e){
+            return ApiResponse.error("Instructor verification failed");
+        }
+
     }
 }

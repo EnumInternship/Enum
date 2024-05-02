@@ -3,10 +3,7 @@ package com.example.EnumProject.services;
 import com.example.EnumProject.data.model.*;
 import com.example.EnumProject.data.repository.UserRepository;
 import com.example.EnumProject.dtos.request.*;
-import com.example.EnumProject.dtos.response.AuthResponse;
-import com.example.EnumProject.dtos.response.CommentResponse;
-import com.example.EnumProject.dtos.response.DeleteResponse;
-import com.example.EnumProject.dtos.response.UpdateResponse;
+import com.example.EnumProject.dtos.response.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,10 +23,9 @@ public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
     private final JwtService jwtService;
     private final AuthenticationProvider authenticationProvider;
-    private final AuthenticationManager authenticationManager;
 
     @Override
-    public AuthResponse signUp(RegisterUserRequest registerUser) {
+    public SignUpResponse signUp(RegisterUserRequest registerUser) {
         var registeredUser = User.builder()
                 .username(registerUser.getUsername())
                 .email(registerUser.getEmail())
@@ -41,7 +37,8 @@ public class UserServiceImpl implements UserService{
 
 
         var jwtToken = jwtService.generateToken( registeredUser);
-        return AuthResponse.builder()
+        return SignUpResponse.builder()
+                .email(registeredUser.getEmail())
                 .token(jwtToken)
                 .message("Successfully created user")
                 .build();
@@ -49,14 +46,7 @@ public class UserServiceImpl implements UserService{
 
 
 
-    public AuthResponse login(LoginUserRequest request) {
-//        System.out.println("i got here");
-//        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-//        System.out.println("i am at the provision manager");
-//        var user = userRepository.findByEmail(request.getEmail()).orElse(null);
-//        System.out.println("found guy");
-//        var token =jwtService.generateToken(user);
-//        return AuthResponse.builder().token(token).build();
+    public LoginResponse login(LoginUserRequest request) {
 
         try {
             authenticationProvider.authenticate(
@@ -74,23 +64,25 @@ public class UserServiceImpl implements UserService{
             var jwtToken = jwtService.generateToken( user);
             log.info("Successfully authenticated user {}", request.getUsername());
 
-            return AuthResponse.builder()
+            return LoginResponse.builder()
                     .token(jwtToken)
                     .message("successfully logged in")
                     .build();
         } catch (AuthenticationException e) {
             log.error("Authentication failed for user {}", request.getUsername(), e);
-            return AuthResponse.builder().message("Authentication failed for user {}" + e.getMessage()).build();
+            return LoginResponse.builder().message("Authentication failed for user {}" + e.getMessage()).build();
         }
     }
 
     @Override
     public Post addPost(AddPostRequest addPostRequest) {
+        log.info("Adding post {}", addPostRequest);
         return postService.addPost(addPostRequest);
+
     }
 
     @Override
-    public CommentResponse addComment(CommentRequest commentRequest) {
+    public ApiResponse<?> addComment(CommentRequest commentRequest) {
         return postService.addComment(commentRequest);
     }
 
@@ -102,5 +94,10 @@ public class UserServiceImpl implements UserService{
     @Override
     public DeleteResponse deletePost(Long postId) {
         return postService.deletePost(postId);
+    }
+
+    @Override
+    public ApiResponse<?> editComment(UpdateCommentReq comment) {
+        return postService.editComment(comment);
     }
 }

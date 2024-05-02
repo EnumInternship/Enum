@@ -1,9 +1,11 @@
 package com.example.EnumProject.dtos.response;
 
+import lombok.Builder;
 import lombok.Data;
 
+@Builder
 @Data
-public class CommentResponse<T> {
+public class LoginResponse {
     private String message;
-    private T data;
+    private String token;
 }

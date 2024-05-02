@@ -6,7 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -25,10 +27,11 @@ public class Post {
     private String content;
     private String author;
     private String dateCreated;
-    @ManyToOne
-    @JoinColumn(name = "postId")
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "post_id")
+    @Cascade(org.hibernate.annotations.CascadeType.PERSIST)
     private User user;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST)
     private List<Comment>comments;
 }
