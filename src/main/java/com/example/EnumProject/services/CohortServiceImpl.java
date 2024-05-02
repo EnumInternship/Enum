@@ -33,9 +33,13 @@ public class CohortServiceImpl implements CohortService {
         var cohort = Cohort.builder()
                 .name(cohortRequest.getCohortName())
                 .description(cohortRequest.getCohortDescription())
+                .startDate(cohortRequest.getStartDate())
+                .endDate(cohortRequest.getEndDate())
+                .role(Role.COHORT)
                 .build();
         cohortRepository.save(cohort);
        return ApiResponse.success(cohort, "successfully");
+
 
     }
 

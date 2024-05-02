@@ -3,13 +3,18 @@ package com.example.EnumProject.services;
 import com.example.EnumProject.data.model.Comment;
 import com.example.EnumProject.data.model.Post;
 import com.example.EnumProject.data.repository.CommentRepository;
+import com.example.EnumProject.data.repository.PostRepository;
 import com.example.EnumProject.dtos.request.CommentRequest;
+import com.example.EnumProject.dtos.request.UpdateCommentReq;
+import com.example.EnumProject.dtos.response.ApiResponse;
 import com.example.EnumProject.dtos.response.CommentResponse;
 import com.example.EnumProject.dtos.response.DeleteResponse;
 import com.example.EnumProject.dtos.response.UpdateResponse;
 import com.example.EnumProject.exception.PostException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 
 @Service
@@ -27,6 +32,23 @@ public class CommentServiceImpl implements CommentService {
         return commentRepository.save(comment);
     }
 
+
+    @Override
+    public ApiResponse<?> updateComment(CommentRequest commentRequest) {
+        Optional<Comment> optionalComment = commentRepository.findById(commentRequest.getId());
+        if (optionalComment.isPresent()) {
+            Comment existingComment = optionalComment.get();
+            existingComment.setAuthor(commentRequest.getAuthor());
+            existingComment.setContent(commentRequest.getContent());
+//            existingComment.setPost(commentRequest.getPost());
+            Comment updatedComment = commentRepository.save(existingComment);
+            return ApiResponse.success(updatedComment, "Successfully updated comment");
+        } else {
+            return ApiResponse.error("Comment not found");
+        }
+    }
+
+
     @Override
     public Comment getCommentById(Long id) {
 
@@ -34,18 +56,17 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public UpdateResponse editComment(Comment comment, Long id) {
-        Comment updatedComment = commentRepository.findCommentById(id).orElseThrow(()->
+    public ApiResponse<?> editComment(UpdateCommentReq comment) {
+        Comment updatedComment = commentRepository.findCommentById(comment.getId()).orElseThrow(()->
                 new PostException("Comment not found"));
 
         updatedComment.setContent(comment.getContent());
-        updatedComment.setAuthor(comment.getAuthor());
-        updatedComment.setComment(comment.getComment());
+        updatedComment.setId(comment.getId());
+
         commentRepository.save(updatedComment);
 
         UpdateResponse updateResponse = new UpdateResponse();
-        updateResponse.setMessage("Comment updated successfully");
-        return updateResponse;
+        return ApiResponse.success(updateResponse, "Successfully updated comment");
     }
 
     @Override
@@ -58,8 +79,6 @@ public class CommentServiceImpl implements CommentService {
         deleteResponse.setMessage("Comment deleted successfully");
 
         return deleteResponse;
-
-
     }
 
     @Override
