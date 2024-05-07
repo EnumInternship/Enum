@@ -1,6 +1,8 @@
 package com.example.EnumProject.data.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cascade;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -17,6 +20,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "post")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Post {
 
     @Id
@@ -26,10 +30,8 @@ public class Post {
     private String title;
     private String content;
     private String author;
-    private String dateCreated;
+    private LocalDate dateCreated;
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "post_id")
-    @Cascade(org.hibernate.annotations.CascadeType.PERSIST)
     private User user;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST)

@@ -18,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "cohort")
-public class Cohort implements UserDetails {
+public class Cohort {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -26,49 +26,13 @@ public class Cohort implements UserDetails {
     private String name;
     private String description;
     private String program;
-    private String email;
-    private String password;
     private String startDate;
     private String endDate;
     private String avatar;
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    @ManyToOne(cascade = CascadeType.ALL)
+    private User creator;
 
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(Role.COHORT.name()));
 
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public String getUsername() {
-        return name;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
 }

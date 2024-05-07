@@ -15,6 +15,6 @@ public interface CommentService {
     ApiResponse<?> editComment(UpdateCommentReq commentRequest);
     DeleteResponse deleteComment(Long id);
 
-    CommentResponse addCommentToComment(Comment comment, Long id);
+    ApiResponse<?> addCommentToComment(Comment comment, Long id);
 
 }

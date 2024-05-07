@@ -3,6 +3,9 @@ package com.example.EnumProject.data.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Data
 @Entity
 @Table(name = "Instructor")
@@ -17,6 +20,6 @@ public class Instructor {
     private String token;
     private Status status;
     private String course;
-    private String date;
+    private LocalDateTime date;
 
 }

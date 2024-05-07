@@ -2,14 +2,11 @@ package com.example.EnumProject.services;
 
 import com.example.EnumProject.data.model.Comment;
 import com.example.EnumProject.data.model.Post;
-import com.example.EnumProject.data.model.User;
-import com.example.EnumProject.data.repository.CommentRepository;
 import com.example.EnumProject.data.repository.PostRepository;
 import com.example.EnumProject.dtos.request.AddPostRequest;
 import com.example.EnumProject.dtos.request.CommentRequest;
 import com.example.EnumProject.dtos.request.UpdateCommentReq;
 import com.example.EnumProject.dtos.response.ApiResponse;
-import com.example.EnumProject.dtos.response.CommentResponse;
 import com.example.EnumProject.dtos.response.DeleteResponse;
 import com.example.EnumProject.dtos.response.UpdateResponse;
 import com.example.EnumProject.exception.PostException;
@@ -17,7 +14,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 
@@ -31,24 +29,23 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public Post addPost(AddPostRequest addPostRequest) {
-        log.info("Adding new post: {}", addPostRequest);
-        var post = Post.builder()
-                .title(addPostRequest.getTitle())
-                .content(addPostRequest.getContent())
-                .author(addPostRequest.getAuthor())
-                .user(User.builder().build())
-                .dateCreated(String.valueOf(addPostRequest.getCreatedAt()))
+        String author = addPostRequest.getAuthor();
+        String title = addPostRequest.getTitle();
+        String content = addPostRequest.getContent();
+        if (author == null
+                || addPostRequest.getTitle() == null
+                || addPostRequest.getContent() == null) {
+            throw new PostException("Fields cannot be null");
+        }
+
+        Post post = Post.builder()
+                .title(title)
+                .content(content)
+                .author(author)
+                .dateCreated(LocalDate.from(LocalDate.now()))
                 .build();
         postRepository.save(post);
-        log.info("Post added: {}", post);
-//
-//        if (post.getComments().isEmpty()) {
-//            log.info("Comment is empty");
-//            post.setComments(List.of(Comment.builder()
-//                    .content("Be the first one to comment!")
-//                    .build()));
-//        }
-        log.info("i got here!!!");
+
         return post;
     }
 
@@ -79,7 +76,6 @@ public class PostServiceImpl implements PostService{
         updatedPost.setContent(post.getContent());
         updatedPost.setAuthor(post.getAuthor());
         postRepository.save(updatedPost);
-
 
         UpdateResponse updateResponse = new UpdateResponse();
         updateResponse.setMessage("Successfully updated post");

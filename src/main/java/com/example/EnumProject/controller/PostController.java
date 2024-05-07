@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @Slf4j
 public class PostController {
-    private final PostService postService;
     private final UserService userService;
 
     @PostMapping("/createPost")
@@ -41,7 +40,7 @@ public class PostController {
     @PostMapping("/addComment")
     public ApiResponse<?> addComment(@RequestBody CommentRequest request) {
 
-        return ApiResponse.success(userService.addComment(request),
+        return ApiResponse.success(userService.addComment(request ),
                 "Comment added");
     }
     @PatchMapping("/editComment")
@@ -50,10 +49,7 @@ public class PostController {
                 "Comment updated");
     }
 
-//    @PatchMapping("/editComment")
-//    public ApiResponse<?> editComment(@RequestBody CommentRequest request) {
-//        return ApiResponse.success(userService.editComment(request, ))
-//    }
+
 
     @PatchMapping("/updatePost")
     public ApiResponse<?> updatePost(@RequestBody Post post){
