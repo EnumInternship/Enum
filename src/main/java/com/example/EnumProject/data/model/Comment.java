@@ -20,6 +20,7 @@ public class Comment {
     private String content;
     private String author;
 
+
     @ManyToOne
     @JoinColumn(name = "postId")
     private Post post;

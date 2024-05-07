@@ -8,7 +8,6 @@ import java.util.Optional;
 public interface CohortRepository extends JpaRepository<Cohort, Long> {
     Optional<Cohort> findByName(String name);
 
-    Optional<Cohort> findByEmail(String email);
 
 
 }

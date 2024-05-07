@@ -4,9 +4,9 @@ import com.example.EnumProject.data.model.*;
 import com.example.EnumProject.data.repository.UserRepository;
 import com.example.EnumProject.dtos.request.*;
 import com.example.EnumProject.dtos.response.*;
+import com.example.EnumProject.security.services.JwtService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public SignUpResponse signUp(RegisterUserRequest registerUser) {
-        var registeredUser = User.builder()
+        User registeredUser = User.builder()
                 .username(registerUser.getUsername())
                 .email(registerUser.getEmail())
                 .password(passwordEncoder.encode(registerUser.getPassword()))
@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService{
         userRepository.save(registeredUser);
 
 
-        var jwtToken = jwtService.generateToken( registeredUser);
+        String jwtToken = jwtService.generateToken( registeredUser);
         return SignUpResponse.builder()
                 .email(registeredUser.getEmail())
                 .token(jwtToken)
@@ -52,31 +52,25 @@ public class UserServiceImpl implements UserService{
             authenticationProvider.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
             );
-            log.info("User {} authenticated successfully", request.getUsername());
 
-            var user = userRepository.findByUsername(request.getUsername()).orElse(null);
+            User user = userRepository.findByUsername(request.getUsername()).orElse(null);
             if (user == null) {
-                log.error("User {} not found in the database", request.getUsername());
                 return null;
             }
-            log.info("Found user {}", user);
 
-            var jwtToken = jwtService.generateToken( user);
-            log.info("Successfully authenticated user {}", request.getUsername());
+            String jwtToken = jwtService.generateToken( user);
 
             return LoginResponse.builder()
                     .token(jwtToken)
                     .message("successfully logged in")
                     .build();
         } catch (AuthenticationException e) {
-            log.error("Authentication failed for user {}", request.getUsername(), e);
             return LoginResponse.builder().message("Authentication failed for user {}" + e.getMessage()).build();
         }
     }
 
     @Override
     public Post addPost(AddPostRequest addPostRequest) {
-        log.info("Adding post {}", addPostRequest);
         return postService.addPost(addPostRequest);
 
     }

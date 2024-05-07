@@ -11,6 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateCohortRequest {
+
+
+    private String creatorUsername;
     private String cohortName;
     private String cohortDescription;
     private String password;

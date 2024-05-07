@@ -76,7 +76,7 @@ public class UserController {
     @PostMapping("/verification")
     public ApiResponse<Instructor> verifyInstructor(@RequestBody String token) {
         try {
-            return ApiResponse.success(instructorService.vrifyInvitedInstructor(token),
+            return ApiResponse.success(instructorService.verifyInvitedInstructor(token),
                     "Instructor Verified successfully");
         }
         catch (Exception e){

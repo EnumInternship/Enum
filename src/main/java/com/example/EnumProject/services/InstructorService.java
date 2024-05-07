@@ -10,7 +10,7 @@ public interface InstructorService {
 
     AddInstructorResponse addInstructor(AddInstructorRequest addInstructorRequest);
 
-    Instructor vrifyInvitedInstructor(String token);
+    Instructor verifyInvitedInstructor(String token);
 
     InviteResponse inviteInstructor(InviteInstructorRequest inviteInstructor);
 

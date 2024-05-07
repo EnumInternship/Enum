@@ -10,7 +10,9 @@ import com.example.EnumProject.dtos.response.ApiResponse;
 import com.example.EnumProject.dtos.response.CommentResponse;
 import com.example.EnumProject.dtos.response.DeleteResponse;
 import com.example.EnumProject.dtos.response.UpdateResponse;
+import com.example.EnumProject.exception.CommentException;
 import com.example.EnumProject.exception.PostException;
+import com.example.EnumProject.exception.PostNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,14 +24,28 @@ import java.util.Optional;
 
 public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
+    private final PostRepository postRepository;
 
     @Override
     public Comment addCommentToPost(CommentRequest commentRequest) {
-      var comment = Comment.builder()
+
+        Optional<Post> optionalPost = postRepository.findById(commentRequest.getId());
+        if (optionalPost.isEmpty()) {
+            throw new PostNotFoundException("Post not found with ID: " + commentRequest.getPostId());
+        }
+        String content = commentRequest.getComment();
+        if(content == null){
+            throw new CommentException("Comment can not be empty");
+        }
+
+        Post post = optionalPost.get();
+      Comment comment = Comment.builder()
               .author(commentRequest.getAuthor())
-              .content(commentRequest.getContent())
+              .content(content)
+              .post(post)
               .build();
-        return commentRepository.save(comment);
+         commentRepository.save(comment);
+         return comment;
     }
 
 
@@ -40,7 +56,6 @@ public class CommentServiceImpl implements CommentService {
             Comment existingComment = optionalComment.get();
             existingComment.setAuthor(commentRequest.getAuthor());
             existingComment.setContent(commentRequest.getContent());
-//            existingComment.setPost(commentRequest.getPost());
             Comment updatedComment = commentRepository.save(existingComment);
             return ApiResponse.success(updatedComment, "Successfully updated comment");
         } else {
@@ -51,7 +66,6 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Comment getCommentById(Long id) {
-
         return null;
     }
 
@@ -62,10 +76,9 @@ public class CommentServiceImpl implements CommentService {
 
         updatedComment.setContent(comment.getContent());
         updatedComment.setId(comment.getId());
-
         commentRepository.save(updatedComment);
-
         UpdateResponse updateResponse = new UpdateResponse();
+        updateResponse.setMessage("Successfully updated comment");
         return ApiResponse.success(updateResponse, "Successfully updated comment");
     }
 
@@ -82,14 +95,13 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentResponse addCommentToComment(Comment comment, Long id) {
+    public ApiResponse<?> addCommentToComment(Comment comment, Long id) {
         Comment addComment = commentRepository.findCommentById(id).orElse(null);
         assert addComment != null;
         addComment.setComment(comment.getComment());
         addComment.setAuthor(comment.getAuthor());
-        commentRepository.save(addComment);
-        CommentResponse commentResponse = new CommentResponse();
-        commentResponse.setMessage("Comment added successfully");
-        return commentResponse;
+       Comment savedComment = commentRepository.save(addComment);
+
+       return ApiResponse.success(savedComment, "Successfully added comment");
     }
 }

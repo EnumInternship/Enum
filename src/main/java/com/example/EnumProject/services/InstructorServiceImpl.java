@@ -15,6 +15,7 @@ import com.example.EnumProject.exception.InstructorNotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -24,8 +25,7 @@ public class InstructorServiceImpl implements InstructorService{
 
     @Autowired
     private InstructorRepository instructorRepository;
-    @Autowired
-    private InvitationService invitationService;
+
     @Autowired
     private MailService mailService;
 
@@ -43,14 +43,14 @@ public class InstructorServiceImpl implements InstructorService{
         response.setInstructorEmail(newInstructor.getInstructorEmail());
         response.setOrganization(newInstructor.getOrganization());
         response.setCourse(newInstructor.getCourse());
-        response.setDate(newInstructor.getDate());
+        response.setDate(LocalDateTime.from(LocalDateTime.now()));
         response.setMessage("Instructor added successfully.");
 
         return response;
     }
 
     @Override
-    public Instructor vrifyInvitedInstructor(String token) {
+    public Instructor verifyInvitedInstructor(String token) {
         Optional<Instructor> instructorOptional = instructorRepository.findByToken(token);
 
         if (instructorOptional.isEmpty())
@@ -80,7 +80,7 @@ public class InstructorServiceImpl implements InstructorService{
         newInstructor.setOrganization(addInstructorRequest.getOrganization());
         newInstructor.setCourse(addInstructorRequest.getCourse());
         newInstructor.setStatus(Status.PENDING);
-        newInstructor.setDate(addInstructorRequest.getDate());
+        newInstructor.setDate(LocalDateTime.from(LocalDateTime.now()));
         return newInstructor;
     }
 

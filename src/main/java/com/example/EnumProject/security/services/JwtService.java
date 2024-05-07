@@ -1,4 +1,4 @@
-package com.example.EnumProject.services;
+package com.example.EnumProject.security.services;
 
 import com.auth0.jwt.algorithms.Algorithm;
 import com.example.EnumProject.config.JwtConfig;
@@ -6,7 +6,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.AllArgsConstructor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import com.auth0.jwt.JWT;
