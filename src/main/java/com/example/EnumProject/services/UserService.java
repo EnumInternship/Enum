@@ -11,7 +11,7 @@ public interface UserService {
     LoginResponse login(LoginUserRequest request);
     Post addPost(AddPostRequest addPostRequest);
     ApiResponse<?> addComment(CommentRequest commentRequest);
-    UpdateResponse updatePost(Post post, Long postId);
+    UpdateResponse updatePost(UpdatePostRequest postRequest);
     DeleteResponse deletePost(Long postId);
 
     ApiResponse<?> editComment(UpdateCommentReq comment);

@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService{
                     .message("successfully logged in")
                     .build();
         } catch (AuthenticationException e) {
-            return LoginResponse.builder().message("Authentication failed for user {}" + e.getMessage()).build();
+            return LoginResponse.builder().message( e.getMessage()).build();
         }
     }
 
@@ -81,8 +81,8 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UpdateResponse updatePost(Post post, Long postId) {
-        return postService.updatePost(post, postId);
+    public UpdateResponse updatePost(UpdatePostRequest postRequest) {
+        return postService.updatePost(postRequest);
     }
 
     @Override

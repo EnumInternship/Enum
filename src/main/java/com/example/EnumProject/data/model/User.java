@@ -1,5 +1,6 @@
 package com.example.EnumProject.data.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,6 +20,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "user")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class User implements UserDetails {
 
     @Id

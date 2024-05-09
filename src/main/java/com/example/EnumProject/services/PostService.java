@@ -5,6 +5,7 @@ import com.example.EnumProject.data.model.Post;
 import com.example.EnumProject.dtos.request.AddPostRequest;
 import com.example.EnumProject.dtos.request.CommentRequest;
 import com.example.EnumProject.dtos.request.UpdateCommentReq;
+import com.example.EnumProject.dtos.request.UpdatePostRequest;
 import com.example.EnumProject.dtos.response.ApiResponse;
 import com.example.EnumProject.dtos.response.CommentResponse;
 import com.example.EnumProject.dtos.response.DeleteResponse;
@@ -17,7 +18,7 @@ public interface PostService {
     Post findPostById(Long id);
     ApiResponse<?> addComment(CommentRequest commentRequest);
 
-    UpdateResponse updatePost(Post post, Long postId);
+    UpdateResponse updatePost(UpdatePostRequest postRequest);
 
     DeleteResponse deletePost(Long postId);
     ApiResponse<?> editComment(UpdateCommentReq comment);

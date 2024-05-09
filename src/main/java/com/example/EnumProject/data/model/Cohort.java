@@ -1,5 +1,9 @@
 package com.example.EnumProject.data.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,6 +22,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "cohort")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Cohort {
 
     @Id
@@ -31,6 +36,8 @@ public class Cohort {
     private String avatar;
 
     @ManyToOne(cascade = CascadeType.ALL)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "username")
+    @JsonIdentityReference(alwaysAsId = true)
     private User creator;
 
 
