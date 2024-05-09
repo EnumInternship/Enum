@@ -16,7 +16,6 @@ public class CreateCohortRequest {
     private String creatorUsername;
     private String cohortName;
     private String cohortDescription;
-    private String password;
     private String startDate;
     private String endDate;
 }

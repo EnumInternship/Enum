@@ -6,15 +6,11 @@ import com.example.EnumProject.data.model.Post;
 import com.example.EnumProject.dtos.request.AddPostRequest;
 import com.example.EnumProject.dtos.request.CommentRequest;
 import com.example.EnumProject.dtos.request.UpdateCommentReq;
+import com.example.EnumProject.dtos.request.UpdatePostRequest;
 import com.example.EnumProject.dtos.response.ApiResponse;
-import com.example.EnumProject.dtos.response.CommentResponse;
-import com.example.EnumProject.dtos.response.DeleteResponse;
-import com.example.EnumProject.dtos.response.UpdateResponse;
-import com.example.EnumProject.services.PostService;
 import com.example.EnumProject.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -52,8 +48,8 @@ public class PostController {
 
 
     @PatchMapping("/updatePost")
-    public ApiResponse<?> updatePost(@RequestBody Post post){
-        return ApiResponse.success(userService.updatePost(post, post.getId()), "Post Updated");
+    public ApiResponse<?> updatePost(@RequestBody UpdatePostRequest post){
+        return ApiResponse.success(userService.updatePost(post), "Post Updated");
     }
 
     @DeleteMapping("deletePost")

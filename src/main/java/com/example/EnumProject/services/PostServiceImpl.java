@@ -2,20 +2,23 @@ package com.example.EnumProject.services;
 
 import com.example.EnumProject.data.model.Comment;
 import com.example.EnumProject.data.model.Post;
+import com.example.EnumProject.data.model.User;
 import com.example.EnumProject.data.repository.PostRepository;
+import com.example.EnumProject.data.repository.UserRepository;
 import com.example.EnumProject.dtos.request.AddPostRequest;
 import com.example.EnumProject.dtos.request.CommentRequest;
 import com.example.EnumProject.dtos.request.UpdateCommentReq;
+import com.example.EnumProject.dtos.request.UpdatePostRequest;
 import com.example.EnumProject.dtos.response.ApiResponse;
 import com.example.EnumProject.dtos.response.DeleteResponse;
 import com.example.EnumProject.dtos.response.UpdateResponse;
 import com.example.EnumProject.exception.PostException;
+import com.example.EnumProject.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 
@@ -25,15 +28,16 @@ import java.util.Optional;
 public class PostServiceImpl implements PostService{
     private final PostRepository postRepository;
     private final CommentService commentService;
+    private final UserRepository userRepository;
 
 
     @Override
     public Post addPost(AddPostRequest addPostRequest) {
-        String author = addPostRequest.getAuthor();
+        User author = userRepository.findByUsername(addPostRequest.getAuthor()).orElseThrow(()->
+                new UserNotFoundException("User not found"));
         String title = addPostRequest.getTitle();
         String content = addPostRequest.getContent();
-        if (author == null
-                || addPostRequest.getTitle() == null
+        if (addPostRequest.getTitle() == null
                 || addPostRequest.getContent() == null) {
             throw new PostException("Fields cannot be null");
         }
@@ -41,7 +45,7 @@ public class PostServiceImpl implements PostService{
         Post post = Post.builder()
                 .title(title)
                 .content(content)
-                .author(author)
+                .author(String.valueOf(author))
                 .dateCreated(LocalDate.from(LocalDate.now()))
                 .build();
         postRepository.save(post);
@@ -68,17 +72,18 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public UpdateResponse updatePost(Post post, Long postId) {
-        Post updatedPost = postRepository.findById(postId).orElseThrow(()->
+    public UpdateResponse updatePost(UpdatePostRequest postRequest) {
+        Post updatedPost = postRepository.findById(postRequest.getPostId()).orElseThrow(()->
                 new PostException("Post not found"));
 
-        updatedPost.setTitle(post.getTitle());
-        updatedPost.setContent(post.getContent());
-        updatedPost.setAuthor(post.getAuthor());
+        updatedPost.setTitle(postRequest.getTitle());
+        updatedPost.setContent(postRequest.getContent());
+        updatedPost.setAuthor(postRequest.getAuthor());
         postRepository.save(updatedPost);
 
         UpdateResponse updateResponse = new UpdateResponse();
         updateResponse.setMessage("Successfully updated post");
+        updateResponse.setContent(updatedPost.getContent());
         return updateResponse;
     }
 
